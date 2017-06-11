@@ -1,0 +1,6 @@
+<ul>
+    <li *ngFor='let group of rootNodes'>
+        {{group.name}}
+        <app-group-tree [nodes]=group.children></app-group-tree>
+    </li>
+</ul>

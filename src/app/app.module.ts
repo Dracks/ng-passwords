@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 
 import Routes from './config/app.routes';
 import { RestModule, ConfigBase } from "libs/ng-data-rest";
+import {Ng2Webstorage} from 'ngx-webstorage';
 
 import RestConfig from "./config/rest.config";
 import { AppComponent } from './app.component';
@@ -21,6 +22,7 @@ import { MainModule } from './main/main.module';
         BrowserModule,
         FormsModule,
         HttpModule,
+        Ng2Webstorage,
         Routes,
         AuthModule,
         LoginModule,

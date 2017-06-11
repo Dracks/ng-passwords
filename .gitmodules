@@ -1,3 +1,3 @@
 [submodule "src/libs/ng-data-rest"]
 	path = src/libs/ng-data-rest
-	url = git@bitbucket.org:jsingla/ng-data-rest.git
+	url = git@bitbucket.org:me-jsingla/ng-data-rest.git

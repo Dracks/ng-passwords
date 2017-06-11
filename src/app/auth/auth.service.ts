@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions, Headers } from "@angular/http";
+import { Http, Response, RequestOptions, Headers } from "@angular/http";
 import { Observable } from 'rxjs';
 import { environment } from "environments/environment";
+import {LocalStorageService} from 'ngx-webstorage';
 import 'rxjs/add/operator/toPromise';
 
 const serverTokenEndpoint = environment.api.host + '/oauth/token/'
@@ -19,9 +20,7 @@ class CredentialsTokenAuth {
         this.scope = json.scope;
         this.token_type = json.token_type;
         var now = new Date();
-        console.log(now);
         now.setSeconds(now.getSeconds()+ json.expires_in);
-        console.log(now);
         this.expiration =  now;
     }
 }
@@ -34,7 +33,11 @@ export class AuthService {
         return !!this.credentials
     }
 
-    constructor(private http: Http) {
+    constructor(private http: Http, private lss: LocalStorageService) {
+        var data = lss.retrieve('auth-credentials');
+        if (data){
+            this.credentials = new CredentialsTokenAuth(data);
+        }
     }
 
     private _getRequestOptions(){
@@ -48,27 +51,27 @@ export class AuthService {
         return requestOptions;
     }
 
+    private _takeCredentials(data: Observable<Response>){
+        return data.toPromise()
+            .then((response) => {
+                var json = response.json()
+                this.lss.store('auth-credentials', json)
+                this.credentials = new CredentialsTokenAuth(json);
+                return true;
+            });
+    }
+
     login(user: string, password: string) {
         const data = { 'grant_type': 'password', username: user, password: password };
         const scopesString = "";
         const requestOptions = this._getRequestOptions();
-        return this.http.post(serverTokenEndpoint, this.urlEncode(data), requestOptions)
-            .toPromise()
-            .then((response) => {
-                this.credentials = new CredentialsTokenAuth(response.json());
-                return true;
-            });
+        return this._takeCredentials(this.http.post(serverTokenEndpoint, this.urlEncode(data), requestOptions))
     }
 
     renewToken(){
         const data = { 'grant_type': 'refresh_token', 'refresh_token': this.credentials.refresh_token}
         const requestOptions = this._getRequestOptions();
-        return this.http.post(serverTokenEndpoint, this.urlEncode(data), requestOptions)
-            .toPromise()
-            .then((response) => {
-                this.credentials = new CredentialsTokenAuth(response.json());
-                return true;
-            });
+        return this._takeCredentials(this.http.post(serverTokenEndpoint, this.urlEncode(data), requestOptions))
     }
 
     urlEncode(obj) {

@@ -8,6 +8,8 @@ import { environment } from 'environments/environment';
 
 import { AuthService } from "app/auth/auth.service";
 
+import * as pluralize from 'pluralize';
+
 
 @Injectable()
 export default class RestConfig extends ConfigBase {
@@ -18,7 +20,8 @@ export default class RestConfig extends ConfigBase {
 
     getEndpoint(cName: string, id?: string): string {
         var endpoint = super.getEndpoint(cName, id);
-        return environment.api.host + '/api' + endpoint;
+        endpoint = environment.api.host + '/api' + pluralize(endpoint)+'/';
+        return endpoint;
     }
 
     getAuth(ro: RequestOptions, cName: string): Promise<RequestOptions>{
