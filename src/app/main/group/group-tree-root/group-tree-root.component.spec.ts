@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupTreeRootComponent } from './group-tree-root.component';
 
-describe('GroupTreeRootComponent', () => {
+xdescribe('GroupTreeRootComponent', () => {
   let component: GroupTreeRootComponent;
   let fixture: ComponentFixture<GroupTreeRootComponent>;
 

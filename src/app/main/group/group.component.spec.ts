@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupComponent } from './group.component';
+import { RestService } from 'libs/ng-data-rest';
 
 describe('GroupComponent', () => {
   let component: GroupComponent;
@@ -8,7 +9,10 @@ describe('GroupComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GroupComponent ]
+      declarations: [ GroupComponent ],
+      providers: [
+          {provide: RestService, useValue: {register: ()=>{}}}
+      ]
     })
     .compileComponents();
   }));
